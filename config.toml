@@ -2,6 +2,8 @@ baseURL = 'https://weerasak.dev/'
 title = 'Weerasak Chongnguluam'
 theme = "hugo-geekblog"
 
+googleAnalytics = 'G-MV8H8VVTED'
+
 pluralizeListTitles = false
 
 # Geekblog required configuration
