@@ -9,16 +9,16 @@ Go [generic](https://go.dev/blog/intro-generics) type ที่มีมาต�
 <!--more-->
 
 ```go
-func FillEmployeeNameValue(e Employee) {
+func FillEmployeeNameValue(e *Employee) {
         e.Name = e.FirstName + " " + e.LastName
 }
 
-func FillCustomerNameValue(c Customer) {
+func FillCustomerNameValue(c *Customer) {
         c.Name = c.FirstName + " " + c.LastName
 }
 
 // ใช้ Generic
-func FillNameValue[T any](t T) {
+func FillNameValue[T any](t *T) {
         t.Name = t.FirstName + " " + t.LastName
 }
 ```
@@ -50,7 +50,7 @@ func (e *Employee) GetFirstName() string { return e.FirstName }
 func (e *Employee) GetLastName() string { return e.LastName }
 ```
 
-ข้อเสียคือ type จำเป็นต้อง implements method ซึ่งบางครั้งเราก็ไม่ได้อยากให้ type เรามี public method เหล่านี้ออกมาให้คนใช้งานเห็นเหมือนกัน จะทำเป็น public ก็ไม่ได้ถ้าเกิด FillNameValue และ NameAccessor อยู่คนละ package
+ข้อเสียคือ type จำเป็นต้อง implements method ซึ่งบางครั้งเราก็ไม่ได้อยากให้ type เรามี public method เหล่านี้ออกมาให้คนใช้งานเห็นเหมือนกัน จะทำเป็น private ก็ไม่ได้ถ้าเกิด FillNameValue และ NameAccessor อยู่คนละ package
 
 2. มีอีกวิธีนึงที่ไม่ต้องใช้ interface คือ สร้าง type ขึ้นมาใหม่สำหรับเป็นตัวกลาง แล้วค่อยสร้าง function สำหรับแปลงค่าจาก type ที่เป็น input เป็น type ที่เราสร้างมาใหม่ ตัวอย่างเช่น
 
