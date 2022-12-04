@@ -3,6 +3,7 @@ title = 'Weerasak Chongnguluam'
 theme = "hugo-geekblog"
 
 googleAnalytics = 'G-MV8H8VVTED'
+enableRobotsTXT = true
 
 pluralizeListTitles = false
 
