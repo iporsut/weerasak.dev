@@ -12,7 +12,7 @@ Elasticsearch Alias ช่วยให้เราตั้งชื่อแท
 
 เราสามารถลิสต์ alias ออกมาได้โดยเรียก method GET ไปที่ path นี้
 
-```
+```txt
 GET /_alias
 ```
 

@@ -27,18 +27,18 @@ Rancher Desktop ให้เราเลือก version ของ Kubernetes �
 
 ## ลอง deploy nginx
 
-```
+```txt
 $ kubectl run nginx --image=nginx:alpine --port=80
 pod/nginx created
 ```
 
-```
+```txt
 $ kubectl get pods
 NAME    READY   STATUS    RESTARTS   AGE
 nginx   1/1     Running   0          23s
 ```
 
-```
+```txt
 $ kubectl port-forward pods/nginx 8080:80
 Forwarding from 127.0.0.1:8080 -> 80
 Forwarding from [::1]:8080 -> 80
@@ -46,7 +46,7 @@ Forwarding from [::1]:8080 -> 80
 
 ลองยิง request ไปที่ localhost:8080
 
-```
+```txt
 % curl localhost:8080
 <!DOCTYPE html>
 <html>

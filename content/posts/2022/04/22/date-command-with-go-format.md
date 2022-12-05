@@ -10,19 +10,19 @@ draft: false
 
 ใน Unix มีคำสั่ง date ไว้แสดงวันที่ปัจจุบัน ซึ่งเวลาสั่ง date เฉยๆจะได้แบบนี้
 
-```
+```txt
 $ date
 Fri Apr 22 22:34:02 +07 2022
 ```
 
 เราสามารถใส่ format ได้โดยใช้ option เป็น string ที่มี + ข้างหน้า เช่น
 
-```
+```txt
 % date "+%Y/%m/%d"
 2022/04/22
 ```
 
-จะเห็นว่าใช้ format string ตามรูปแบบของ Unix 
+จะเห็นว่าใช้ format string ตามรูปแบบของ Unix
 
 ที่นี้เราจะสร้างโปรแกรมขึ้นมาใหม่แทน date ให้ใช้ format layout แบบของ Go [time package](https://pkg.go.dev/time#Time.Format) แทน
 
@@ -47,7 +47,7 @@ func main() {
 
 เวลาใช้งานก็สั่ง ชื่อ command ได้เลยหรือใส่ option -f ตามด้วย format แบบ Go ได้แบบนี้
 
-```
+```txt
 $ ./dt
 2022-04-22T22:42:11+07:00
 

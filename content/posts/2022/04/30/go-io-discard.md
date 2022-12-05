@@ -10,7 +10,7 @@ draft: false
 
 ผมเลือกไปค้นใน package path "net" แล้วก็ path อื่นๆที่อยู่ภายใต้ "net" ด้วย ค้นเจอว่ามีการใช้ `io.Discard` แบบนี้
 
-```
+```txt
 $ pwd
 /Users/weerasak/src/go/src/net
 $ ag "io\.Discard"
@@ -38,10 +38,10 @@ http/transfer.go
 
 ใน [document]() ของ `io.Discard` เขียนเอาไว้ว่า
 
-```
+```go
 var Discard Writer = discard{}
 
-Discard is a Writer on which all Write calls succeed without doing anything.
+// Discard is a Writer on which all Write calls succeed without doing anything.
 ```
 
 นั่นคือเราเขียนข้อมูลไปที่ `io.Discard` มันจะเขียนได้สำเร็จ แต่มันไม่ได้ทำอะไรทั้งนั้นล่ะ
@@ -50,7 +50,7 @@ Discard is a Writer on which all Write calls succeed without doing anything.
 
 ถ้าใครเขียน shell คงเคยเห็น pattern แบบนี้
 
-```
+```txt
 $ grep -r hello /sys/ 2> /dev/null
 ```
 
