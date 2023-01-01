@@ -2,6 +2,8 @@ baseURL = 'https://weerasak.dev/'
 title = 'Weerasak Chongnguluam'
 theme = "hugo-geekblog"
 
+disableKinds = ["taxonomy", "term"]
+
 googleAnalytics = 'G-MV8H8VVTED'
 enableRobotsTXT = true
 
