@@ -4,9 +4,14 @@ date: 2023-03-04T06:50:01+07:00
 draft: fase
 ---
 
-Rust พยายามไม่ใช้เกิดการใช้งาน reference ที่ผิดๆเช่นอ้างอิงตัวแปรที่ หลังจากค่าในตัวแปรนั้นๆถูกคืนหน่วยความจำไปแล้ว (Dangling Reference)
+Rust พยายามไม่ใช้เกิดการใช้งาน reference ที่ผิดๆ เช่นอ้างอิงถึงตัวแปรที่ถูกคืนหน่วยความจำไปแล้ว (Dangling Reference)
 
-ทีนี้มีการใช้ภาษาบางส่วนที่ใช้ reference เช่น type ที่สามารถมีตัวแปร reference ภายใน เช่น struct , enum และ การส่ง reference ไปให้กับ function (borrowing) แล้ว function ตอบ reference กลับคืนมา ที่ทำให้ Rust ต้องการรู้ความสัมพันธ์ระหว่าง ช่วงชีวิต (lifetime) ของ reference ที่เกี่ยวข้องกับการใช้งานแบบนี้อยู่ เลยเกิด lifetime ขึ้นมา
+ทีนี้มีรูปแบบการใช้งานบางรูปแบบที่ compiler ไม่สามารถตรวจสอบได้โดยตรงว่ามีการใช้งาน reference ของตัวแปรที่คืนหน่วยความจำไปแล้วหรือไม่ ทำให้ต้องเราต้องใช้ lifetime annotation ช่วยเพิ่มข้อมูลให้กับ compiler รู้ได้ว่า reference ที่เราใช้งานนั้นมีช่วงชีวิต lifetime อยู่แค่ไหน
+
+โพสต์นี้จะอธิบายสองรูปแบบคือ
+
+- การส่งค่า reference เข้าไปเป็น parameter ของฟังก์ชัน และ return ค่า reference กลับมา
+- การเก็บค่า reference เป็น field หนึ่งของ struct
 
 <!--more-->
 
@@ -25,13 +30,11 @@ fn main() {
 }
 ```
 
-โค้ดนี้ compile ผ่านเพราะ compile ผ่านเพราะเรามีแค่ 1 parameter คือ x ที่เป็น reference ของ str แล้วก็ตอบกับ x กลับไป
+โค้ดนี้ compile ผ่านเพราะเพราะเรามีแค่ 1 parameter คือ `x` ที่เป็น reference ของ `str` แล้วก็ตอบกับ `x` กลับไป
 
-ใน main เราก็เรียก ref_of_x แล้วเก็บค่าที่ตอบกลับมาใน result
+ใน `main` เราก็เรียก `ref_of_x` แล้วเก็บค่าที่ตอบกลับมาใน `result`
 
-ซึ่งจะเห็นลำดับการสร้างของตัวแปรว่า เราสร้าง string1 แล้วเรียก ref_of_x ส่ง ref ของ string1 เข้าไปแล้ว result ก็คือ ref ของ string1 ที่สร้างทีหลัง
-
-ผลลัพธ์คือ result มีช่วงชีวิตเท่ากันกับ strings1 จะถูก drop ไปพร้อมกับ string1 ทำให้ยังผ่านเงื่อนไขของ Rust compiler ไม่เกิด Dangling reference เกิดขึ้น
+ซึ่งจะเห็นว่าตัวแปร `string1` และ `result` อยู่ใน scope เดียวกันจะถูกคืนค่าหน่วยความจำหลังจากจบการทำงาน block เดียวกันไม่มีโอกาสที่จะถูกเอาไปใช้ผิดๆหลังจากนั้น จึงทำให้ compiler compile ผ่าน เพราะวิเคราะห์แล้วไม่มีทางที่จะเกิด Dangling reference เกิดขึ้น
 
 ทีนี้ถ้าโค้ดเราแบบนี้แทน
 
@@ -50,7 +53,7 @@ fn main() {
 }
 ```
 
-จะได้ compile error แบบนี้
+compiler จะ compile error แบบนี้
 
 ```
 error[E0597]: `string1` does not live long enough
@@ -67,7 +70,7 @@ For more information about this error, try `rustc --explain E0597`.
 error: could not compile `playground` due to previous error
 ```
 
-เพราะว่า string1 ถูกคืนหน่วยความจำไปก่อน (drop) เนื่องจากว่าถูกประกาศตัวแปรไว้ใน block {} อีกอันที่มีช่วงชีวิตที่สั้นกว่า result ที่เป็น reference หา string1
+เพราะว่า `string1` ถูกคืนหน่วยความจำไปก่อน (drop) เนื่องจากว่าถูกประกาศตัวแปรไว้ใน block {} อีกอันที่มีช่วงชีวิตที่สั้นกว่า `result` ที่เป็น reference หา `string1`
 
 จากโค้ดตัวอย่างเมื่อกี้ไม่เห็นมี lifetime annotation เลย เพราะ Rust มีกด lifetime elission คือถ้าไม่ใส่จะเติมให้เองได้ถ้าเข้าเงื่อนไขของ lifetime elission เช่นตัวอย่างเมื่อกี้ Rust จะมองว่าเหมือนมี lifetime annotation ให้แบบนี้
 
@@ -84,7 +87,7 @@ fn main() {
 }
 ```
 
-ซึ่ง lifetime annotation คือเราสร้างชื่อตัวนึง เหมือนกับ generic type parameter เลยแค่ชื่อจะมี `'` เป็น prefix และใช้ lower character แทน upper แบบของ generic type parameter ทั่วไป
+ซึ่ง lifetime annotation เราต้องลิสต์เป็น type parameter แบบเดียวกับ generic type parameter อื่นๆ แต่ว่าชื่อ parameter ต้องขึ้นต้นด้วย `'` แล้วตาม convention จะใช้อักษรตัวเลขไล่จาก `a` เป็นต้นไป
 
 ตอนเอามากำหนดให้ตัวแปร reference ก็ใส่หลัง `&` ก่อนแล้วค่อยเว้นวรรค ตามด้วยชื่อ type
 
@@ -110,7 +113,7 @@ fn main() {
 }
 ```
 
-ถ้าโค้ดแบบนี้ Rust จะงงว่า lifetime ของ return type จะเป็นอะไร เพราะมีทั้ง x และ y แล้วจะ compile error มาแบบนี้
+ถ้าโค้ดแบบนี้ Rust จะงงว่า lifetime ของ return type จะเป็นอะไร เพราะมีทั้ง `x` และ `y` แล้วจะ compile error มาแบบนี้
 
 ```
 error[E0106]: missing lifetime specifier
@@ -151,19 +154,19 @@ fn main() {
 }
 ```
 
-ทีนี้จุดที่น่าสงสัยคือ ทำไมใช้ 'a กับทั้ง x และ y
+ทีนี้จุดที่น่าสงสัยคือ ทำไมถึงใช้ `'a` กับทั้ง `x` และ `y`
 
-จริงๆแล้วเราใช้คนละตัวก็ได้ แต่พอโค้ดเรามีโอกาสตอบกลับได้ทั้ง x และ y ทำให้ Rust compiler ไม่รู้ว่า return type เราจะเป็น x หรือ y กันแน่
+จริงๆแล้วเราใช้คนละตัวก็ได้ แต่พอโค้ดเรามีโอกาสตอบกลับได้ทั้ง `x` และ `y` ทำให้ Rust compiler ไม่รู้ว่า return type เราจะเป็น `x` หรือ `y` กันแน่
 
-Rust เลยให้เราใช้ 'a ได้กับทั้ง x และ y
+Rust เลยให้เราใช้ `'a` ได้กับทั้ง `x` และ `y`
 
-แม้ว่า syntax จะเป็นแบบนี้ ไม่ได้หมายความว่า 'a จะเป็นข้อมูล lifetime ของทั้ง x และ y ได้ในเวลาเดียวกัน
+แม้ว่า syntax จะเป็นแบบนี้ ไม่ได้หมายความว่า `'a` จะเป็นข้อมูล lifetime ของทั้ง `x` และ `y` ได้ในเวลาเดียวกัน
 
-แต่ Rust compiler จะเลือกแค่ lifetime ที่สั้นที่สุด อายุน้อยที่สุดระหว่าง x และ y
+แต่ Rust compiler จะเลือกแค่ lifetime ที่สั้นที่สุด อายุน้อยที่สุดระหว่าง `x` และ `y`
 
-เช่นจากโค้ดการใช้งานใน main เมื่อกี้ เราส่ง ref ของ string1 เข้าไปที่ x, ส่ง ref string2 ไปที y ซึ่งช่วงชีวิตของ string2 สั้นกว่าเพราะอยู่ใน scope ที่จบก่อน string1 ทำให้ 'a ก็จะแทนด้วย lifetime ของ y นั่นเอง ทำให้ lifetime ของค่าที่ตอบกลับมาของ longest ที่เก็บใน result ก็จะมีช่วงชีวิตเดียวกันกับ string2 ไปด้วย
+เช่นจากโค้ดการใช้งานใน main เมื่อกี้ เราส่ง ref ของ `string1` เข้าไปที่ `x`, ส่ง ref `string2` ไปที `y` ซึ่งช่วงชีวิตของ `string2` สั้นกว่าเพราะอยู่ใน scope ที่จบก่อน `string1` ทำให้ `'a` ก็จะแทนด้วย lifetime ของ `y` นั่นเอง ทำให้ lifetime ของค่าที่ตอบกลับมาของ `longest` ที่เก็บใน `result` ก็จะมีช่วงชีวิตเดียวกันกับ `string2` ไปด้วย
 
-ดังนั้นเราจะเขียนโค้ดแบบนี้ไม่ได้ จะ compile ไม่ผ่าน
+ดังนั้นเราจะเขียนโค้ดแบบ จะ compile ไม่ผ่าน
 
 ```rust
 fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
@@ -186,7 +189,7 @@ fn main() {
 }
 ```
 
-เพราะเรามีใช้งาน result หลังจากค่าที่ return นั้นจบชีวิต (drop) ไปแล้วนั่นเอง แม้ว่าฟังก์ชันมีโอกาสตอบกลับค่า x ตอน runtime แต่ว่า compiler ไม่สามารถรู้ได้ตอน compile time จึงทำให้ compile error นั่นเอง
+เพราะเรามีใช้งาน `result` หลังจากค่าที่ return นั้นจบชีวิต (drop) ไปแล้วนั่นเอง แม้ว่าฟังก์ชันมีโอกาสตอบกลับค่า `x` ตอน runtime แต่ว่า compiler ไม่สามารถรู้ได้ตอน compile time จึงทำให้ compile error นั่นเอง
 
 ต่อไปคือเคสที่มี reference ใน data structure อื่นๆเช่น struct เราก็ต้องกำหนด lifetime annotation ให้กับ field ที่เป็น reference ด้วยแบบนี้
 
