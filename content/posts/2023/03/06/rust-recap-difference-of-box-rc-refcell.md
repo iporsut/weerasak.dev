@@ -164,5 +164,5 @@ fn main() {
 
 - Box เพิ่มความสามารถในการเก็บตัวแปรใน heap
 - Rc เก็บใน heap แต่เพิ่ม owner หลายๆ owner ได้
-- RefCell เก็บใน heap แต่เพิ่มให้ mutable ค่าใน heap ตอน runtime ได้
-- Rc+RefCell ก็ทำให้ทั้งมีหลายๆ owner และ แก้ไขค่าได้ตอน runtime
+- RefCell ทำให้ mutable ค่าที่อยู่ข้างใน RefCell แม้ว่า RefCell จะเป็น immutable ได้
+- Rc+RefCell ก็ทำให้ทั้งมีหลายๆ owner และ แก้ไขค่าได้ตอน runtime ของค่าที่เก็บอยู่ใน heap ได้
