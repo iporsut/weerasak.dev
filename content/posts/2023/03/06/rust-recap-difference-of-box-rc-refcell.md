@@ -125,7 +125,7 @@ fn main() {
 
 จะได้ panic message ประมาณนี้
 
-```
+```txt
 thread 'main' panicked at 'already mutably borrowed: BorrowError', src/main.rs:7:39
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 ```

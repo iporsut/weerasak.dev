@@ -10,7 +10,7 @@ draft: false
 
 วิธีสร้าง workspace settings ก็ง่ายๆ ให้เราเพิ่ม directory `.vscode` และสร้างไฟล์ config `settings.json` ในนั้น ตัวอย่างเช่นเรามีโปรเจค `todoapp` เราก็สร้างไฟล์ไว้ใน `.vscode/settigns.json` ไว้ใน `todoapp` แบบนี้
 
-```
+```txt
 ├── todoapp
     ├── .vscode
     │   └──settings.json

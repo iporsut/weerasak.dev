@@ -55,7 +55,7 @@ fn main() {
 
 โค้ดนี้จะไม่สามารถ compile ผ่านได้เลย Rust จะขึ้น compile error แบบนี้
 
-```
+```txt
 error[E0515]: cannot return reference to temporary value
  --> src/main.rs:8:16
   |

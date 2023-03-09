@@ -55,7 +55,7 @@ fn main() {
 
 compiler จะ compile error แบบนี้
 
-```
+```txt
 error[E0597]: `string1` does not live long enough
   --> src/main.rs:9:27
    |
@@ -115,7 +115,7 @@ fn main() {
 
 ถ้าโค้ดแบบนี้ Rust จะงงว่า lifetime ของ return type จะเป็นอะไร เพราะมีทั้ง `x` และ `y` แล้วจะ compile error มาแบบนี้
 
-```
+```txt
 error[E0106]: missing lifetime specifier
  --> src/main.rs:1:33
   |
