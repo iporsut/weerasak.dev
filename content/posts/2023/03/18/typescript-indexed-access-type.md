@@ -57,11 +57,16 @@ export interface TableProps<RecordType>
 เราสามารถ indexed access type ของ property `onChange?` ของ type `TableProps<RecordType>` ได้ ทำให้เราเขียน callback function ได้แบบนี้แทน
 
 ```typescript
-const onChange: TableProps<Customer> = (pagination, filter, sorter, extra) => {
+const onChange: TableProps<Customer>["onChange"] = (
+  pagination,
+  filter,
+  sorter,
+  extra
+) => {
   // ...
 };
 ```
 
-โดยที่ไม่ต้องระบุ type ของ parameter เอง
+เราแค่ใช้ TableProps ระบุ generic type parameter แล้วก็ใช้ `[]` operator ในการระบุ property ไหนที่เราต้องการอ้างอิง type ของ TableProps เท่านี้เอง เช่นเคสนี้เราก็แค่ใส่ `["onChange"]` เพื่อเอา type ของ property `onChange?` จาก TableProps ให้เรา โดยที่ไม่ต้องระบุ type ของ parameter เอง
 
 ดูเพิ่มเติมเกี่ยวกับ indexed access type ได้ที่นี่ https://www.typescriptlang.org/docs/handbook/2/indexed-access-types.html
